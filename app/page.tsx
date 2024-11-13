@@ -1,10 +1,9 @@
 // import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Plus,Edit, Trash } from "lucide-react";
 
 import {  getTodoListAction } from "@/actions/todo.actions";
 import { AddTodoForm } from "@/components/AddTodoForm";
 import TodosTable from "@/components/TodosTable";
+import { auth } from "@clerk/nextjs/server";
 
 // interface Todo {
 //   id: string;
@@ -17,18 +16,20 @@ import TodosTable from "@/components/TodosTable";
 
 export default async function Home() {
 
+    const {userId} = await auth();
 
 
-   const todos = await getTodoListAction();
+   const todos = await getTodoListAction(
+         {user_id: userId}
+   );
 
    console.log(todos);
   return (
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Button>Add Todo <Plus size={24} /> </Button>
+          <AddTodoForm userId={userId} />
 
           <TodosTable data={todos} />
 
-        <AddTodoForm />
       </main>
   );
 }

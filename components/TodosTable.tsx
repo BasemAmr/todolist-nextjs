@@ -27,7 +27,7 @@ const TodosTable = (
         completed: todo.completed
     }))
 
-    const keys = Object.keys(todos[0]);
+    const keys = todos[0] ? Object.keys(todos[0]) : null;
 
   return (
    <Table>
@@ -35,7 +35,7 @@ const TodosTable = (
       <TableHeader>
         <TableRow>
           {
-            keys.map((key) => (
+            keys && keys.map((key) => (
                 <TableHead key={key}>{key}</TableHead>
             ))
           }
@@ -44,7 +44,7 @@ const TodosTable = (
       </TableHeader>
       <TableBody>
         {
-            todos.map((todo, _idx) => (
+            keys && todos.map((todo, _idx) => (
                 <TableRow key={todo.title}>
                     {
                         // loop through the keys of the todo object 

@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Plus } from "lucide-react"
+import { Pen } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -26,7 +26,7 @@ import {
   import { zodResolver } from "@hookform/resolvers/zod"
   import { useForm } from "react-hook-form"
   import { z } from "zod"
-import { createTodoAction } from "@/actions/todo.actions";
+import { updateTodoAction } from "@/actions/todo.actions";
 import { useState } from "react";
  
   
@@ -39,12 +39,12 @@ export  type TodoForm = z.infer<typeof todoScheme>;
   
 
 
-export function AddTodoForm({userId}: {userId: string | null}) {
+export function EditTodoForm({data} : {data: TodoForm & {id: string}}) {
 
     const defaultValues: Partial<TodoForm> = {
-        title: "",
-        body: "",
-        completed: true,
+        title: data.title,
+        body: data.body,
+        completed: data.completed,
       };
     
       const form = useForm<TodoForm>({
@@ -56,13 +56,13 @@ export function AddTodoForm({userId}: {userId: string | null}) {
 
       const [open, setOpen] = useState(false);
 
-      const onSubmit = async (data: TodoForm) => {
-        console.log(data);
-        await createTodoAction({
-            title: data.title,
-            body: data.body,
-            completed: data.completed,
-            user_id: userId
+      const onSubmit = async (formData: TodoForm) => {
+        console.log(formData);
+        await updateTodoAction({
+            id: data.id,
+            title: formData.title,
+            body: formData.body,
+            completed: formData.completed,
         })
         setOpen(false);
       };
@@ -70,13 +70,13 @@ export function AddTodoForm({userId}: {userId: string | null}) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Todo 
-            <Plus size={16} className="ml-2" />
+      <Button  variant="outline" size="sm" color="blue">
+            <Pen size={8} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Todo Form</DialogTitle>
+          <DialogTitle>Edit Todo Form</DialogTitle>
           <DialogDescription>
            Time to be productive! ;)
           </DialogDescription>
@@ -140,7 +140,7 @@ export function AddTodoForm({userId}: {userId: string | null}) {
             </FormItem>
           )}
         />
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Edit!</Button>
           </form>
         </Form>
         </div>
